@@ -1,7 +1,5 @@
-#svg_canvas {
+.line {
     fill: none;
-    stroke: lightblue;
-    stroke-width: 1px;
-    stroke-dasharray: 0;
-    stroke-linejoin: round;
+    stroke: steelblue;
+    stroke-width: 2px;
   }
