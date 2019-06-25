@@ -33,11 +33,33 @@ function visualizeData(data) {
         .append('g')
         .attr('class', 'node')
         .attr('transform', function (d) {
-            return ('translate(' + (data[0].indexOf(d) * 1200 / 310 + 10) + ',' + ((600 - 0.5 * d.werte.Rpm) + 10) + ')');
+            return ('translate(' + (data[0].indexOf(d) * 1200 / 310 + 10) + ',' + ((600 - 0.1 * Math.pow(convertCommaFloats(d.werte.Tavg_laut), 2)) + 10) + ')');
         })
 
     canvas.append('circle')
         .attr('r', 2)
+        .style('fill', 'blue')
+
+
+};
+
+d3.select('#svg_canvas').append('line')
+    .attr('x1', '0')
+    .attr('y1', '595')
+    .attr('x2', '1195')
+    .attr('y2', '595')
+    .attr('id', 'x_axis');
+
+
+function convertCommaFloats(inpt) {
+    let inptString = inpt.toString();
+
+    inptString = inptString.replace(',', '.');
+
+    let re = parseFloat(inptString);
+
+    return re;
+
 };
 
 
