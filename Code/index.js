@@ -15,7 +15,7 @@ var parseTime = d3.timeParse('%d.%m.%Y %H:%M:%S');
 //set the graph line
 var valueline = d3.line()
     .x(function(d) { return x(d.datum)})
-    .y(function(d) { return y(d.werte.Rpm); });
+    .y(function(d) { return y(d.werte.Tavg_temp); });
 
 
 //appending the svg 'canvas'
@@ -46,17 +46,17 @@ function visualiseData(data) {
 
     //some test logs
     console.log(data[0][12].datum);
-
+    console.log(data[0]);  
 
     //formatting the data:
     data[0].forEach(function(d) {
         d.datum = parseTime(d.datum);
-        d.werte.Rpm= convertCommaFloats(d.werte.Rpm)
+        d.werte.Tavg_temp= convertCommaFloats(d.werte.Tavg_temp)
     });
     
 
     x.domain(d3.extent(data[0], function(d) { return d.datum; }));
-    y.domain([0, d3.max(data[0], function(d) { return (d.werte.Rpm); })]);
+    y.domain([0, d3.max(data[0], function(d) { return (d.werte.Tavg_temp); })]);
 
 
     // Add the valueline path.
