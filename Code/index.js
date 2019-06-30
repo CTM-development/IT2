@@ -15,12 +15,12 @@ var y = d3.scaleLinear().range([height, 0]);
 var parseTime = d3.timeParse('%d.%m.%Y %H:%M:%S');
 
 //set the graph line
-var valueline0 = d3.line()
+var valuelineData = d3.line()
     .x(function (d) { console.log(d); return x(d.datum) })
     .y(function (d) { return y(d.werte.Tavg_vibr); });
 
     //set the graph line
-var valueline1 = d3.line()
+var valuelineBase = d3.line()
 .x(function (d) { console.log(d); return x(d.datum) })
 .y(function (d) { return y(d.werte.Tavg_vibr); });
 
@@ -57,9 +57,10 @@ function receiveData(data) {
 function visualiseData(data) {
     dataSave = data;
     console.log(dataSave);
+
     //some test logs
-  //  console.log(data[0][12].datum);
-   // console.log(data);
+    console.log(data[0][12].datum);
+    console.log(data);
 
     //formatting the data:
     data[3].forEach(function (d) {
@@ -76,7 +77,7 @@ function visualiseData(data) {
     svg0.append("path")
         .data([data[3]])
         .attr("class", "line")
-        .attr("d", valueline0);
+        .attr("d", valuelineData);
 
     // Add the X Axis
     svg0.append("g")
@@ -89,9 +90,9 @@ function visualiseData(data) {
 
     // Add the valueline path.
     svg1.append("path")
-        .data([data[2]])
+        .data([data[0]])
         .attr("class", "line")
-        .attr("d", valueline1);
+        .attr("d", valuelineData);
 
     // Add the X Axis
     svg1.append("g")
@@ -117,27 +118,3 @@ function convertCommaFloats(inpt) {
 
 };
 
-/*function extractPosInArray(inpt){
-    let inptString = inpt.toString();
-
-    let c = inptString.slice(14,17);
-
-    c= c.replace(':','');
-
-    let re = c.parseFloat()/60;
-    return re;
-}
-*/
-
-//dead code for a question
-/*
-d3.select('#svg_canvas').append('line')
-    .attr('x1', '0')
-    .attr('y1', '595')
-    .attr('x2', '1195')
-    .attr('y2', '595')
-    .attr('id', 'x_axis');
-
-
-d3.select('#header_div').append('p').text('hallo')
-*/
