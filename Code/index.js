@@ -2,6 +2,8 @@
 var files = ['http://it2wi1.if-lab.de/rest/mpr_fall1', 'http://it2wi1.if-lab.de/rest/mpr_fall2', 'http://it2wi1.if-lab.de/rest/mpr_fall3', 'http://it2wi1.if-lab.de/rest/mpr_fall4'];
 var promises = [];
 
+var dataSave;
+
 //set base val variables for later use
 var margin = { top: 20, right: 20, bottom: 30, left: 50 },
     width = 1200 - margin.left - margin.right,
@@ -53,10 +55,11 @@ function receiveData(data) {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //actuall visualisation  ation work is done here
 function visualiseData(data) {
-
+    dataSave = data;
+    console.log(dataSave);
     //some test logs
-    console.log(data[0][12].datum);
-    console.log(data);
+  //  console.log(data[0][12].datum);
+   // console.log(data);
 
     //formatting the data:
     data[3].forEach(function (d) {
