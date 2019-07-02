@@ -1,5 +1,5 @@
 //save the url links to the data download here
-var files = ['http://it2wi1.if-lab.de/rest/mpr_fall1'];
+var files = ['http://it2wi1.if-lab.de/rest/mpr_fall1','http://it2wi1.if-lab.de/rest/mpr_fall2'];
 var promises = [];
 
 var dataSave;
@@ -9,22 +9,13 @@ var margin = { top: 20, right: 20, bottom: 30, left: 50 },
     width = 1200 - margin.left - margin.right,
     height = 900 - margin.top - margin.bottom;
 
-// setting the ranges for the x and y axes
-var x = d3.scaleTime().range([0, width]);
-var y = d3.scaleLinear().range([height, 0]);
 
 //custom time parser
 var parseTime = d3.timeParse('%d.%m.%Y %H:%M:%S');
 
 
-//get the graph line coordinates
-var valuelineData = d3.line()
-    .x(function (d) { console.log(d); return x(d.datum) })
-    .y(function (d) { return y(d.werte.Tavg_vibr); });
-
-
 //appending the svg 'canvas'
-var svg = d3.select("body").append("svg")
+var svg = d3.select("#dataVis").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
     .append("g")
@@ -43,6 +34,7 @@ Promise.all(promises).then((result) => receiveData(result), function (error) {
 //data was loaded without any errors
 function receiveData(data) {
     console.log('data was received succefuly');
+    console.log(data);
     visualiseData(data);
 };
 
@@ -50,44 +42,58 @@ function receiveData(data) {
 //actuall visualisation  ation work is done here
 
 
-function visualiseData(data){
+function visualiseData(data) {
 
-    dataSave=data;
+    dataSave = data;
 
     //some test logs
-
+    //console.log(data[0]);
 
     //formatting the data
-    data[3].forEach(function (d) {
+    data[0].forEach(function (d) {
         d.datum = parseTime(d.datum);
         d.werte.Tavg_vibr = convertCommaFloats(d.werte.Tavg_vibr)
     });
 
+    // setting the ranges for the x and y axes
+    var x = d3.scaleTime().range([0, width]);
+    var y = d3.scaleLinear().range([height, 0]);
+
 
     //setting the domains for the x and y axes
-    x.domain(d3.extent(data[3], function (d) { return d.datum; }));
-    y.domain([0, d3.max(data[3], function (d) { return (d.werte.Tavg_vibr); })]);
+    x.domain(d3.extent(data[0], function (d) { return d.datum; }));
+    y.domain([0, d3.max(data[0], function (d) { return (d.werte.Tavg_vibr); })]);
 
-    svg.selectAll(".line")
-    .data(data[0])
-    .enter()
-    .append("path")
-      .attr("fill", "none")
-      .attr("stroke",'blue' )
-      .attr("stroke-width", 1.5)
-      .attr("d", function(d){
-        return d3.line()
-          .x(function(d) { return x(d.datum); })
-          .y(function(d) { return y(d.werte.Tavg_vibr); })
-          (d.values)
-      })
+    //appending the axes to the graph
+    svg.append("g")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(x));
+
+    svg.append("g")
+        .call(d3.axisLeft(y));
+
+
+
+
+
+
+
+    // graph gets constructed here
+    svg.append("path")
+        .data([data[0]])
+        .attr("class", "line")
+        .attr('fill', 'none')
+        .attr('stroke', 'steelblue')
+        .attr('stroke-width', 1.5)
+        .attr("d", d3.line()
+            .x(function (d, i) { console.log(d,i); return x(d.datum) })
+            .y(function (d) { return y(d.werte.Tavg_vibr); }))
+            
+
+
+
 
 }
-
-
-
-
-
 
 
 
