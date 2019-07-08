@@ -1,14 +1,32 @@
+.header{
+  margin-left: 2.55%;
+  margin-right: 2.55%;
 
+  margin-top:2%;
+
+}
 .grid-container {
-    display: grid;
-    grid-template-columns: 16.66% 16.66% 16.66% 16.66% 16.66% 16.66%;
+  display: grid;
+  grid-template-columns: 16.66% 16.66% 16.66% 16.66% 16.66% 16.66%;
 
-    margin-left: 5%;
-    margin-right: 5%;
-  }
+  margin-left: 2.5%;
+  margin-right: 2.5%;
+
+  margin-top:2%;
+}
 
   .graphItem{
     grid-area: 1/1/6/4;
-    background-color:rgb(252, 183, 35);
+    background-color:rgb(180, 215, 221);
+    border: 5px solid rgb(0, 0, 0);
+    border-radius: 5px;
 
   }
+
+  .line{
+    fill:none;
+    stroke: rgb(255, 0, 191);
+    stroke-width: 1.5;
+    shape-rendering: geometricPrecision;
+  }
+  .axis { font: 15px sans-serif; }

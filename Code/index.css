@@ -1,5 +1,67 @@
-.line {
-    fill: none;
-    stroke: steelblue;
-    stroke-width: 2px;
-  }
+.header{
+  margin-left: 2.55%;
+  margin-right: 2.55%;
+
+  margin-top:2%;
+
+}
+.grid-container {
+  display: grid;
+  grid-template-columns: 16.66% 16.66% 16.66% 16.66% 16.66% 16.66%;
+
+  margin-left: 2.5%;
+  margin-right: 2.5%;
+
+  margin-top:2%;
+}
+
+.graphItem_1{
+  grid-area: 1/1/6/4;
+  background-color:rgb(214, 214, 214);
+  border: 5px solid rgb(0, 0, 0);
+  border-radius: 5px;
+}
+
+.graphItem_2{
+  grid-area: 1/4/6/8;
+  background-color:rgb(214, 214, 214);
+  border: 5px solid rgb(0, 0, 0);
+  border-radius: 5px;
+}
+.graphItem_3{
+  grid-area: 6/1/10/4;
+  background-color:rgb(214, 214, 214);
+  border: 5px solid rgb(0, 0, 0);
+  border-radius: 5px;
+}
+
+.graphItem_4{
+  grid-area: 6/4/10/8;
+  background-color:rgb(214, 214, 214);
+  border: 5px solid rgb(0, 0, 0);
+  border-radius: 5px;
+}
+
+.axis { font: 15px sans-serif; }
+
+.line{
+  fill:none;
+  stroke: rgb(0, 17, 255);
+  stroke-width: 1.5;
+  shape-rendering: geometricPrecision;
+}
+
+#RPM{
+  stroke:black;
+}
+#temp{
+  stroke:rgb(118, 197, 0);
+}
+#laut{
+  stroke: rgb(255, 0, 221);
+}
+.axisLable{
+  font-size: 20px;
+
+}
+
