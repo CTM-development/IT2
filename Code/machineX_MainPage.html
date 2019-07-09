@@ -6,6 +6,7 @@
     <script src="https://d3js.org/d3.v5.js"></script>
     <link rel="stylesheet" type="text/css" href="overviewPage.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 </head>
 
 <body class="noPaddingNoMargin baseColor">
@@ -21,16 +22,55 @@
         </div>
     </div>
 
+
+
+
     <div class='grid-container'>
-        <div id='info_1' class='gridItem1'>
-            <h2>Item 1</h2>
+        <div id='tear'>
+            <svg width="100%" height="200px">
+                <circle cx="50%" cy="100" r="100" stroke=" none " stroke-width="4" fill="lightblue" />
+                <image xlink:href="pictures/drop.png" x="12%" y="25" height="80%" width="80%" />
+            </svg>
         </div>
-        <div id='info_2' class='gridItem2'>
-            <h2>Item 2</h2>
+        <div id='gears'>
+            <svg width="100%" height="200px">
+                <circle cx="50%" cy="100" r="100" stroke=" none " stroke-width="4" fill="lightblue" />
+                <image xlink:href="pictures/gears.png" x="12%" y="25" height="80%" width="80%" />
+            </svg>
+        </div>
+
+
+    </div>
+    <div id='badPositioning' class='grid-container'>
+        <div class='gridItem1'>
+        </div>
+        <div class='gridItem2'>
+        </div>
+        <div class='gridItem3'>
+            <p>Schmiermittel</p>
+        </div>
+        <div class=gridItem4>
+            <p>Kugellager</p>
+        </div>
+        <div class='gridItem5'>
+            <svg width='100%' height='80%'>
+                <rect x='10%' y='5%' width='80%' height='40%' fill='lightblue' rx='15' ry ='15'></rect>
+                <image xlink:href='pictures/thermometer.svg' x='10%' y='7.5%' height="35%" width="15%"></image>
+                <rect x='10%' y='55%' width='80%' height='40%' fill='lightblue' rx='15' ry ='15'></rect>
+                <image xlink:href='pictures/battery.svg' x='10%' y='57.5%' height="35%" width="15%"></image>
+            </svg>
+        </div>
+        <div class='gridItem6'>
+            <svg width='100%' height='80%'>
+                <rect x='10%' y='5%' width='80%' height='40%' fill='lightblue' rx='15' ry ='15'></rect>
+                <image xlink:href='pictures/speaker.svg' x='12.5%' y='7.5%' height="35%" width="12.5%"></image>
+                <rect x='10%' y='55%' width='80%' height='40%' fill='lightblue' rx='15' ry ='15'></rect>
+                <image xlink:href='pictures/tuning-fork.svg' x='12.5%' y='57.5%' height="35%" width="12.5%"></image>
+            </svg>
+
         </div>
 
     </div>
-
 
     <script src='machineX_MainPage.js'></script>
 </body>
