@@ -1,32 +1,95 @@
-.header{
-  margin-left: 2.55%;
-  margin-right: 2.55%;
-
-  margin-top:2%;
-
+.baseColor {
+  background-color: #717e87;
 }
+
+/*topnav stuff happpens here*/
+
+.header {
+  background-color: #314151;
+  color: white;
+  padding: 0;
+  margin-bottom: 2.5%;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #314151;
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+li {
+  font-size: 3vh;
+  float: left;
+}
+
+.navEle {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+.right {
+  float: right;
+}
+
+li a:hover:not(.active) {
+  background-color: #111;
+}
+
+.active {
+  background-color: rgb(206, 99, 0);
+}
+
+#topNavIcon {
+  padding-right: 0;
+}
+
 .grid-container {
   display: grid;
-  grid-template-columns: 16.66% 16.66% 16.66% 16.66% 16.66% 16.66%;
-
-  margin-left: 2.5%;
-  margin-right: 2.5%;
-
-  margin-top:2%;
+  grid-template-columns: 11.11% 11.11% 11.11% 11.11% 11.11% 11.11% 11.11% 11.11% 11.11%;
+  margin-left: 4%;
+  margin-right: 4%;
+  margin-top: 15vh;
 }
 
-  .graphItem{
-    grid-area: 1/1/6/4;
-    background-color:rgb(180, 215, 221);
-    border: 5px solid rgb(0, 0, 0);
-    border-radius: 5px;
+.gridItem1 {
+  grid-area: 1/1/10/5;
+  background-color: rgb(180, 215, 221);
 
-  }
+  border: 5px solid rgb(0, 0, 0);
+  border-radius: 5px;
 
-  .line{
-    fill:none;
-    stroke: rgb(255, 0, 191);
-    stroke-width: 1.5;
-    shape-rendering: geometricPrecision;
-  }
-  .axis { font: 15px sans-serif; }
+}
+
+.gridItem2 {
+  grid-area: 1/6/10/10;
+  background-color: #314151;
+
+  color:white;
+}
+
+.infoText{
+  font-size:5vw;
+  fill:white;
+}
+
+
+
+
+.line {
+  fill: none;
+  stroke: rgb(255, 0, 191);
+  stroke-width: 1.5;
+  shape-rendering: geometricPrecision;
+}
+
+.axis {
+  font: 15px sans-serif;
+}

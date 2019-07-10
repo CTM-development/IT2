@@ -2,14 +2,14 @@
 var files = ['http://it2wi1.if-lab.de/rest/mpr_fall4', 'http://it2wi1.if-lab.de/rest/mpr_fall2'];
 var promises = [];
 
-var dataSave;
+var dataSave=[];
 
 var winWidth = window.innerWidth;
 var winHeight = window.innerHeight;
 
 var margin = { top: 20, right: 10, bottom: 30, left: 60 },
-    width = winWidth / 2.2 - margin.left - margin.right,
-    height = winHeight / 2.2 - margin.top - margin.bottom;
+    width = (winWidth /10)*4 - margin.left - margin.right,
+    height = winHeight / 1.75 - margin.top - margin.bottom;
 
 
 //custom time parser
@@ -114,9 +114,12 @@ function visualiseData(data) {
 
 
     setInterval(function () {
+        computeSlope(data[0]);
+
         var v = data.shift();
         data.push(v);
         redrawWithAnimation();
+
     }, 100)
 
 }
@@ -136,3 +139,15 @@ function convertCommaFloats(inpt) {
     return re;
 
 };
+
+
+function computeSlope(inpt){
+
+    if(dataSave.length<10){
+        dataSave.push(inpt);
+    }
+    else{
+        dataSave.shift();
+        dataSave.push(inpt);
+    }
+}
