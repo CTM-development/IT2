@@ -57,10 +57,29 @@ li a:hover:not(.active) {
   margin-left: 4%;
   margin-right: 4%;
   margin-top: 15vh;
+
+  background-color: #314151;
+
+}
+.wrap{
+  cursor: pointer;
 }
 
-.gridItem1 {
-  grid-area: 1/1/10/5;
+.gridItemText_left {
+  grid-area: 1/1/10/4;
+  background-color: #314151;
+
+  color:white;
+}
+.gridItemText_right{
+  grid-area: 1/5/10/10;
+  background-color: #314151;
+
+  color:white;
+}
+
+.gridItemGraph {
+  grid-area: 1/1/10/10;
   background-color: rgb(180, 215, 221);
 
   border: 5px solid rgb(0, 0, 0);
@@ -68,15 +87,16 @@ li a:hover:not(.active) {
 
 }
 
-.gridItem2 {
-  grid-area: 1/6/10/10;
-  background-color: #314151;
+#graphContainer{
+  margin-top:7.5vh;
+}
 
-  color:white;
+.yLabel{
+  font-size: 2vw;
 }
 
 .infoText{
-  font-size:5vw;
+  font-size:3.5vw;
   fill:white;
 }
 
@@ -92,4 +112,12 @@ li a:hover:not(.active) {
 
 .axis {
   font: 15px sans-serif;
+}
+
+
+
+/* svg text stuff */
+
+#infoText{
+
 }

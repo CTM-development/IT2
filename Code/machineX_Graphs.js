@@ -1,14 +1,14 @@
 //save the url links to the data download here
-var files = ['http://it2wi1.if-lab.de/rest/mpr_fall4', 'http://it2wi1.if-lab.de/rest/mpr_fall2'];
+var files = ['http://it2wi1.if-lab.de/rest/mpr_fall1', 'http://it2wi1.if-lab.de/rest/mpr_fall2'];
 var promises = [];
 
-var dataSave=[];
+
 
 var winWidth = window.innerWidth;
 var winHeight = window.innerHeight;
 
 var margin = { top: 20, right: 10, bottom: 30, left: 60 },
-    width = (winWidth /10)*4 - margin.left - margin.right,
+    width = (winWidth / 10) * 4.65 - margin.left - margin.right,
     height = winHeight / 1.75 - margin.top - margin.bottom;
 
 
@@ -30,12 +30,14 @@ Promise.all(promises).then((result) => receiveData(result), function (error) {
 //data was loaded without any errors
 function receiveData(data) {
     console.log('data was received succefuly');
-    
+
 
     //formatting the data
     data[0].forEach(function (d) {
         d.datum = parseTime(d.datum);
-        d.DATA = convertCommaFloats(d.werte.Tavg_vibr)
+        d.DATA = convertCommaFloats(d.werte.Tavg_temp);
+        d.werte.Qualitaetsgrenze = convertCommaFloats(d.werte.Qualitaetsgrenze);
+        d.werte.Tavg_temp = convertCommaFloats(d.werte.Tavg_temp);
     });
     visualiseData(data[0]);
 };
@@ -51,10 +53,16 @@ function visualiseData(data) {
 
     //appending the svg 'canvas'
     var graph = d3.select("#dataVis").append("svg")
-        .attr("width", '100%')
+        .attr("width", '50%')
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    var calcu = d3.select("#dataVis").append("svg")
+        .attr("width", '50%')
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + 5 + "," + margin.top + ")");
 
 
     // setting the ranges for the x and y axes
@@ -63,8 +71,8 @@ function visualiseData(data) {
 
 
     //setting the domains for the x and y axes
-    x.domain([0,10]);
-    y.domain([0, 0.25]);
+    x.domain([0, 30]);
+    y.domain([0, 20 + d3.max(data, function (d) { return d.DATA; })]);
 
     //custom axes
     var xAxis = d3.axisBottom(x)
@@ -73,23 +81,92 @@ function visualiseData(data) {
     var yAxis = d3.axisLeft(y)
         .ticks(10);
 
-    //appending the axes to the graph
+    //custom axes for the calculated data graph
+    var xAxisCalc = d3.axisBottom(x)
+        .ticks(10)
+
+    var yAxisCalc = d3.axisLeft(y)
+        .tickValues([])
+        .ticks(10);
+
+    //appending the axes to the graphs
     graph.append("g")
         .attr("transform", "translate(0," + height + ")")
         .attr("class", 'axis')
         .call(xAxis);
 
-
     graph.append("g")
         .attr("class", 'axis')
         .call(yAxis);
 
-    var line = d3.line()
-        .x(function (d, i) { 
-            if(i<=0){console.log(d,i)};
-            return x(i); })
-        .y(function (d, i) { return y(d.DATA)});
+    graph.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 0 - margin.left)
+        .attr("x", 0 - (height / 2))
+        .attr("dy", "1.25em")
+        .attr('class', 'yLabel')
+        .style("text-anchor", "middle")
+        .text("Temperatur in grad celsius");
 
+    //appending the 2 constants
+    graph.append("svg:line")
+        .attr("x1", 0)
+        .attr("x2", width)
+        .attr("y1", y(75))
+        .attr("y2", y(75))
+        .style("stroke", "orange");
+
+    graph.append("svg:line")
+        .attr("x1", 0)
+        .attr("x2", width)
+        .attr("y1", y(90))
+        .attr("y2", y(90))
+        .style("stroke", "red");
+
+    calcu.append("svg:line")
+        .attr("x1", 0)
+        .attr("x2", width)
+        .attr("y1", y(75))
+        .attr("y2", y(75))
+        .style("stroke", "orange");
+
+    calcu.append("svg:line")
+        .attr("x1", 0)
+        .attr("x2", width)
+        .attr("y1", y(90))
+        .attr("y2", y(90))
+        .style("stroke", "red");
+
+    //calculated data graph
+    calcu.append("g")
+        .attr("transform", "translate(0," + height + ")")
+        .attr("class", 'axis')
+        .call(xAxisCalc);
+
+    calcu.append("g")
+        .attr("class", 'axis')
+        .call(yAxisCalc);
+
+
+    var line = d3.line()
+        .x(function (d, i) {
+            if (i <= 0) {
+            };
+            if (i < 31) {
+                return x(i);
+            }
+        })
+        .y(function (d, i) { return y(d.DATA) });
+
+    var calculatedLine = d3.line()
+        .x(function (d, i) {
+            if (i <= 0) {
+            };
+            if (i < 11) {
+                return x(i);
+            }
+        })
+        .y(function (d, i) { return y(d) });
 
     // graphline gets constructed here
     graph.append("path")
@@ -106,21 +183,52 @@ function visualiseData(data) {
             .attr("transform", "translate(0," + x(1) + ")") // set the transform to the right by x(1) pixels (6 for the scale we've set) to hide the new value
             .attr("d", line) // apply the new data values ... but the new value is hidden at this point off the right of the canvas
             .transition() // start a transition to bring the new value into view
-            
-            .duration(100) // for this demo we want a continual slide so set this to the same as the setInterval amount below
+
+            .duration(1000) // for this demo we want a continual slide so set this to the same as the setInterval amount below
             .attr("transform", "translate(0," + x(0) + ")"); // animate a slide to the left back to x(0) pixels to reveal the new value
 
     }
 
+    function drawCalcualtions(inpt) {
+
+        d3.select('#cLine').remove();
+        d3.select('#cLine').remove();
+        d3.select('#cLine').remove();
+
+        calcu.append("svg:line")
+            .attr("x1", 0)
+            .attr('id', 'cLine')
+            .attr("x2", width)
+            .attr("y1", y(inpt[0]))
+            .attr("y2", y(inpt[2])) //averageSlope
+            .style("stroke", "blue")
+            .style("stroke-width", "4px");
+
+        calcu.append("svg:line")
+            .attr("x1", 0)
+            .attr('id', 'cLine')
+            .attr("x2", width)
+            .attr("y1", y(inpt[1]))
+            .attr("y2", y(inpt[3])) //accurateSlope
+            .style("stroke", "green")
+            .style("stroke-width", "4px");
+    }
+
 
     setInterval(function () {
-        computeSlope(data[0]);
 
         var v = data.shift();
         data.push(v);
+
         redrawWithAnimation();
 
-    }, 100)
+
+        computeOilQuality(data[0].werte.Tavg_temp, data[0].werte.Qualitaetsgrenze);
+
+
+        drawCalcualtions(givePrediction(data.slice(0, 30)));
+
+    }, 1000)
 
 }
 
@@ -141,13 +249,60 @@ function convertCommaFloats(inpt) {
 };
 
 
-function computeSlope(inpt){
+function computeSlope(inpt, c) {
 
-    if(dataSave.length<10){
-        dataSave.push(inpt);
+    if (c == 0) {
+        return (inpt[inpt.length-1].DATA / inpt[0].DATA);
     }
-    else{
-        dataSave.shift();
-        dataSave.push(inpt);
+    else {
+        return (inpt[inpt.length-1].DATA / inpt[inpt.length-2].DATA);
+    }
+
+}
+
+function givePrediction(inpt) {
+
+
+
+    var averageSlope = computeSlope(inpt, 0);
+    var accurateSlope = computeSlope(inpt, 1);
+
+    var cache=inpt[inpt.length-1].DATA;
+    for (var count = 1; count <= inpt.length; count++) {
+        cache*=accurateSlope;
+    }
+
+    
+
+    var startEnd = [];
+
+    startEnd[0] = inpt[inpt.length-1].DATA;
+    startEnd[1] = inpt[inpt.length-1].DATA;
+    startEnd[2] = inpt[inpt.length-1].DATA * averageSlope;
+    startEnd[3] = cache;
+
+    return startEnd;
+
+}
+
+
+
+function computeOilQuality(temp, quali) {
+
+    var diff = temp / quali;
+    diff = diff.toFixed(2);
+
+    if (diff <= 1) {
+        d3.select('#infoText_quali')
+            .text(' Oil quality is at 100%')
+
+    }
+    else {
+        diff = 2 - diff;
+        diff = diff.toFixed(2);
+        d3.select('#infoText_quali')
+            .text('Oil quality is at ' + diff + '%')
+
+
     }
 }

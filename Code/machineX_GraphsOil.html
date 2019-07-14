@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html>
+
+<head>
+    <script src="https://d3js.org/d3.v5.js"></script>
+    <link rel="stylesheet" type="text/css" href="graphSite.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+</head>
+
+<body class="noPaddingNoMargin baseColor">
+
+    <div class='header'>
+        <div id='topNavbar'>
+            <ul>
+                <li><a class="active navEle" href="machineX_MainPage.html">Home</a></li>
+                <li class='navEle'>This machine</li>
+                <li class='right navEle'>User</li>
+                <li id='topNavIcon' class='right navEle'><i class="glyphicon glyphicon-user"></i></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class='grid-container'>
+
+        <div class='gridItemText_left'>
+            <svg width="100%" height="300px">
+                <circle cx="150" cy="150" r="120" stroke=" none " stroke-width="4" fill="lightblue" />
+                <image xlink:href="pictures/traffic-light.svg" x="17.5%" y="20%" height="60%" width="60%" />
+            </svg>
+        </div>
+        <div class ='gridItemText_right'>
+            <svg width='100%' height='100%'>
+                <rect x='5%' y='12.5%' width='90%' height='30%' fill='lightblue' rx='15' ry='15'></rect>
+                <image xlink:href='pictures/thermometer.svg' x='5%' y='15%' height="25%" width="15%"></image>
+                <text class="infoText" id="infoText_currentTemp"x='20%' y='32.5%'> test</text>
+
+                <rect x='5%' y='57.5%' width='90%' height='30%' fill='lightblue' rx='15' ry='15'></rect>
+                <image id='batteryImg' xlink:href='pictures/battery(2).svg' x='5%' y='60%' height="25%" width="15%"></image>
+                <text class="infoText" id="infoText_quali" x='20%' y='77.5%'> test</text>
+
+            </svg>
+        </div>
+
+    </div>
+    <div class='grid-container' id='graphContainer'>
+        <div id='dataVis' class='gridItemGraph'>
+            <h2>This is the graph area</h2>
+        </div>
+    </div>
+
+
+    <script src='machineX_Graphs.js'></script>
+</body>
+
+</html>
