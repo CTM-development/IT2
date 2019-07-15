@@ -46,40 +46,35 @@ function receiveData(data) {
 //actuall visualisation  ation work is done here
 
 
+
+
+
 function visualiseData(data) {
 
     //some test logs
     console.log(data);
 
     //appending the svg 'canvas'
-    var graph = d3.select("#dataVis").append("svg")
+    var graph_l = d3.select("#dataVis").append("svg")
         .attr("width", '50%')
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    var calcu = d3.select("#dataVis").append("svg")
+    var graph_r = d3.select("#dataVis").append("svg")
         .attr("width", '50%')
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
         .attr("transform", "translate(" + 5 + "," + margin.top + ")");
 
 
-    // setting the ranges for the x and y axes
-    var x = d3.scaleLinear().range([0, width]);
-    var y = d3.scaleLinear().range([height, 0]);
+    // setting bases variables for dynamic axes
+    var xScale = d3.scaleTime();
+    var yScale = d3.scaleLinear();
 
+    var xAxisCall = d3.axisBottom()
+    var yAxisCall = d3.axisLeft()
 
-    //setting the domains for the x and y axes
-    x.domain([0, 30]);
-    y.domain([0, 20 + d3.max(data, function (d) { return d.DATA; })]);
-
-    //custom axes
-    var xAxis = d3.axisBottom(x)
-        .ticks(10)
-
-    var yAxis = d3.axisLeft(y)
-        .ticks(10);
 
     //custom axes for the calculated data graph
     var xAxisCalc = d3.axisBottom(x)
@@ -90,64 +85,28 @@ function visualiseData(data) {
         .ticks(10);
 
     //appending the axes to the graphs
-    graph.append("g")
-        .attr("transform", "translate(0," + height + ")")
-        .attr("class", 'axis')
-        .call(xAxis);
+    initAxis();
 
-    graph.append("g")
-        .attr("class", 'axis')
-        .call(yAxis);
 
-    graph.append("text")
+    graph_l.append("text")
         .attr("transform", "rotate(-90)")
         .attr("y", 0 - margin.left)
         .attr("x", 0 - (height / 2))
         .attr("dy", "1.25em")
         .attr('class', 'yLabel')
         .style("text-anchor", "middle")
-        .text("Temperatur in grad celsius");
+        .text("Temperatur in °C");
 
     //appending the 2 constants
-    graph.append("svg:line")
-        .attr("x1", 0)
-        .attr("x2", width)
-        .attr("y1", y(75))
-        .attr("y2", y(75))
-        .style("stroke", "orange")
-        .style("stroke-width", "4px");
-
-    graph.append("svg:line")
-        .attr("x1", 0)
-        .attr("x2", width)
-        .attr("y1", y(90))
-        .attr("y2", y(90))
-        .style("stroke", "red")
-        .style("stroke-width", "4px");
-
-    calcu.append("svg:line")
-        .attr("x1", 0)
-        .attr("x2", width)
-        .attr("y1", y(75))
-        .attr("y2", y(75))
-        .style("stroke", "orange")
-        .style("stroke-width", "4px");
-
-    calcu.append("svg:line")
-        .attr("x1", 0)
-        .attr("x2", width)
-        .attr("y1", y(90))
-        .attr("y2", y(90))
-        .style("stroke", "red")
-        .style("stroke-width", "4px");
+    appendConstants();
 
     //calculated data graph
-    calcu.append("g")
+    graph_r.append("g")
         .attr("transform", "translate(0," + height + ")")
         .attr("class", 'axis')
         .call(xAxisCalc);
 
-    calcu.append("g")
+    graph_r.append("g")
         .attr("class", 'axis')
         .call(yAxisCalc);
 
@@ -162,27 +121,107 @@ function visualiseData(data) {
         })
         .y(function (d, i) { return y(d.DATA) });
 
-    var calculatedLine = d3.line()
-        .x(function (d, i) {
-            if (i <= 0) {
-            };
-            if (i < 11) {
-                return x(i);
-            }
-        })
-        .y(function (d, i) { return y(d) });
 
     // graphline gets constructed here
-    graph.append("path")
+    graph_l.append("path")
         .data([data])
         .attr("class", "line")
         .attr("d", line(data));
 
 
+    setInterval(function () {
+
+        var v = data.slice(0,10);
+        data.push(v);
+
+        redrawWithAnimation();
+
+
+        computeOilQuality(data[0].werte.Tavg_temp, data[0].werte.Qualitaetsgrenze);
+
+
+
+        drawValues(data[29]);
+
+    }, 1000)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    function updateAxis() {
+        var t = d3.transition()
+            .duration(500)
+
+        svg.select(".x")
+            .transition(t)
+            .call(xAxisCall)
+
+        svg.select(".y")
+            .transition(t)
+            .call(yAxisCall)
+
+    }
+
+
+
+    function initAxis() {
+        svg.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(" + [margin.left, height - margin.top] + ")")
+            .call(xAxisCall)
+
+        svg.append("g")
+            .attr("class", "y axis")
+            .attr("transform", "translate(" + [margin.left, margin.top] + ")")
+            .call(yAxisCall)
+    }
+
+
+
+
 
     function redrawWithAnimation() {
         // update with animation
-        graph.selectAll(".line")
+        graph_l.selectAll(".line")
             .data([data]) // set the new data
             .attr("transform", "translate(0," + x(1) + ")") // set the transform to the right by x(1) pixels (6 for the scale we've set) to hide the new value
             .attr("d", line) // apply the new data values ... but the new value is hidden at this point off the right of the canvas
@@ -194,67 +233,43 @@ function visualiseData(data) {
     }
 
 
-    function drawCalcualtions(inpt) {
 
-        d3.select('#cLine').remove();
-        d3.select('#cLine').remove();
-        d3.select('#cLine').remove();
-        d3.select('#cLine').remove();
-        d3.select('#cLine').remove();
-        d3.select('#cLine').remove();
-
-        calcu.append('svg:polygon')
-            .attr('id', 'cLine')
-            .attr('points', '0,' + y(inpt[1]) + ' ' + width + ',' + y(inpt[3]) + ' ' + width + ',' + y(inpt[2]))
-            .attr('fill', "grey")
-            .attr('fill-opacity', '0.3')
-
-        calcu.append("svg:line")
+    function appendConstants() {
+        graph_l.append("svg:line")
             .attr("x1", 0)
-            .attr('id', 'cLine')
             .attr("x2", width)
-            .attr("y1", y(inpt[1]))
-            .attr("y2", y(inpt[3])) //accurateSlope
-            .style("stroke", "gray")
-            .style("stroke-width", "2px");
-
-        calcu.append("svg:line")
-            .attr("x1", 0)
-            .attr('id', 'cLine')
-            .attr("x2", width)
-            .attr("y1", y(inpt[0]))
-            .attr("y2", y(inpt[2])) //averageSlope
-            .style("stroke", "blue")
+            .attr("y1", y(75))
+            .attr("y2", y(75))
+            .style("stroke", "orange")
             .style("stroke-width", "4px");
 
-        calcu.append("svg:line")
+        graph_l.append("svg:line")
             .attr("x1", 0)
-            .attr('id', 'cLine')
             .attr("x2", width)
-            .attr("y1", y(inpt[0]))
-            .attr("y2", y(inpt[4])) //averageSlope
-            .style("stroke", "blue")
+            .attr("y1", y(90))
+            .attr("y2", y(90))
+            .style("stroke", "red")
             .style("stroke-width", "4px");
 
+        graph_r.append("svg:line")
+            .attr("x1", 0)
+            .attr("x2", width)
+            .attr("y1", y(75))
+            .attr("y2", y(75))
+            .style("stroke", "orange")
+            .style("stroke-width", "4px");
+
+        graph_r.append("svg:line")
+            .attr("x1", 0)
+            .attr("x2", width)
+            .attr("y1", y(90))
+            .attr("y2", y(90))
+            .style("stroke", "red")
+            .style("stroke-width", "4px");
 
     }
 
 
-    setInterval(function () {
-
-        var v = data.shift();
-        data.push(v);
-
-        redrawWithAnimation();
-
-
-        computeOilQuality(data[0].werte.Tavg_temp, data[0].werte.Qualitaetsgrenze);
-
-
-        drawCalcualtions(givePrediction(data.slice(0, 30)));
-        drawValues(data[29]);
-
-    }, 100)
 
 }
 
@@ -350,3 +365,4 @@ function drawValues(inpt) {
 
     }
 }
+
