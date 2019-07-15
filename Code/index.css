@@ -60,6 +60,9 @@
 #laut{
   stroke: rgb(255, 0, 221);
 }
+#quali{
+  stroke: rgb(6, 73, 0);
+}
 .axisLable{
   font-size: 20px;
 

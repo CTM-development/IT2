@@ -114,28 +114,32 @@ function visualiseData(data) {
         .attr("x2", width)
         .attr("y1", y(75))
         .attr("y2", y(75))
-        .style("stroke", "orange");
+        .style("stroke", "orange")
+        .style("stroke-width", "4px");
 
     graph.append("svg:line")
         .attr("x1", 0)
         .attr("x2", width)
         .attr("y1", y(90))
         .attr("y2", y(90))
-        .style("stroke", "red");
+        .style("stroke", "red")
+        .style("stroke-width", "4px");
 
     calcu.append("svg:line")
         .attr("x1", 0)
         .attr("x2", width)
         .attr("y1", y(75))
         .attr("y2", y(75))
-        .style("stroke", "orange");
+        .style("stroke", "orange")
+        .style("stroke-width", "4px");
 
     calcu.append("svg:line")
         .attr("x1", 0)
         .attr("x2", width)
         .attr("y1", y(90))
         .attr("y2", y(90))
-        .style("stroke", "red");
+        .style("stroke", "red")
+        .style("stroke-width", "4px");
 
     //calculated data graph
     calcu.append("g")
@@ -184,16 +188,35 @@ function visualiseData(data) {
             .attr("d", line) // apply the new data values ... but the new value is hidden at this point off the right of the canvas
             .transition() // start a transition to bring the new value into view
 
-            .duration(1000) // for this demo we want a continual slide so set this to the same as the setInterval amount below
+            .duration(100) // for this demo we want a continual slide so set this to the same as the setInterval amount below
             .attr("transform", "translate(0," + x(0) + ")"); // animate a slide to the left back to x(0) pixels to reveal the new value
 
     }
+
 
     function drawCalcualtions(inpt) {
 
         d3.select('#cLine').remove();
         d3.select('#cLine').remove();
         d3.select('#cLine').remove();
+        d3.select('#cLine').remove();
+        d3.select('#cLine').remove();
+        d3.select('#cLine').remove();
+
+        calcu.append('svg:polygon')
+            .attr('id', 'cLine')
+            .attr('points', '0,' + y(inpt[1]) + ' ' + width + ',' + y(inpt[3]) + ' ' + width + ',' + y(inpt[2]))
+            .attr('fill', "grey")
+            .attr('fill-opacity', '0.3')
+
+        calcu.append("svg:line")
+            .attr("x1", 0)
+            .attr('id', 'cLine')
+            .attr("x2", width)
+            .attr("y1", y(inpt[1]))
+            .attr("y2", y(inpt[3])) //accurateSlope
+            .style("stroke", "gray")
+            .style("stroke-width", "2px");
 
         calcu.append("svg:line")
             .attr("x1", 0)
@@ -208,10 +231,12 @@ function visualiseData(data) {
             .attr("x1", 0)
             .attr('id', 'cLine')
             .attr("x2", width)
-            .attr("y1", y(inpt[1]))
-            .attr("y2", y(inpt[3])) //accurateSlope
-            .style("stroke", "green")
+            .attr("y1", y(inpt[0]))
+            .attr("y2", y(inpt[4])) //averageSlope
+            .style("stroke", "blue")
             .style("stroke-width", "4px");
+
+
     }
 
 
@@ -227,8 +252,9 @@ function visualiseData(data) {
 
 
         drawCalcualtions(givePrediction(data.slice(0, 30)));
+        drawValues(data[29]);
 
-    }, 1000)
+    }, 100)
 
 }
 
@@ -252,10 +278,10 @@ function convertCommaFloats(inpt) {
 function computeSlope(inpt, c) {
 
     if (c == 0) {
-        return (inpt[inpt.length-1].DATA / inpt[0].DATA);
+        return (inpt[inpt.length - 1].DATA / inpt[0].DATA);
     }
     else {
-        return (inpt[inpt.length-1].DATA / inpt[inpt.length-2].DATA);
+        return (inpt[inpt.length - 1].DATA / inpt[inpt.length - 2].DATA);
     }
 
 }
@@ -267,19 +293,20 @@ function givePrediction(inpt) {
     var averageSlope = computeSlope(inpt, 0);
     var accurateSlope = computeSlope(inpt, 1);
 
-    var cache=inpt[inpt.length-1].DATA;
+    var cache = inpt[inpt.length - 1].DATA;
     for (var count = 1; count <= inpt.length; count++) {
-        cache*=accurateSlope;
+        cache *= accurateSlope;
     }
 
-    
+
 
     var startEnd = [];
 
-    startEnd[0] = inpt[inpt.length-1].DATA;
-    startEnd[1] = inpt[inpt.length-1].DATA;
-    startEnd[2] = inpt[inpt.length-1].DATA * averageSlope;
+    startEnd[0] = inpt[inpt.length - 1].DATA;
+    startEnd[1] = inpt[inpt.length - 1].DATA;
+    startEnd[2] = inpt[inpt.length - 1].DATA * averageSlope;
     startEnd[3] = cache;
+    startEnd[4] = inpt[inpt.length - 1].DATA * averageSlope * 0.99;
 
     return startEnd;
 
@@ -294,6 +321,7 @@ function computeOilQuality(temp, quali) {
 
     if (diff <= 1) {
         d3.select('#infoText_quali')
+            .attr('fill', 'white')
             .text(' Oil quality is at 100%')
 
     }
@@ -301,8 +329,24 @@ function computeOilQuality(temp, quali) {
         diff = 2 - diff;
         diff = diff.toFixed(2);
         d3.select('#infoText_quali')
+            .attr('fill', 'red')
             .text('Oil quality is at ' + diff + '%')
 
+
+    }
+}
+
+
+function drawValues(inpt) {
+    if (inpt.DATA < 75) {
+        d3.select('#infoText_currentTemp')
+            .attr('fill', 'white')
+            .text('Oil temperature: ' + inpt.DATA + '°C')
+    }
+    else {
+        d3.select('#infoText_currentTemp')
+            .attr('fill', 'red')
+            .text('Oil temperature: ' + inpt.DATA + '°C')
 
     }
 }

@@ -51,7 +51,7 @@ function visualiseData_1(data) {
 
     //some test logs
     //console.log(data[0]);
-
+    computeDiff(data);
 
     //appending the svg 'canvas'
     var svg = d3.select("#dataVis_1").append("svg")
@@ -144,6 +144,16 @@ function visualiseData_1(data) {
             .x(function (d, i) { return x(d.datum) })
             .y(function (d, i) {
                 return y(convertCommaFloats(d.werte.Tavg_temp) / 100);
+            }))
+    svg.append('path')
+        .data([data])
+        .attr("class", "line")
+        .attr('id', 'quali')
+        .attr('stroke', 'orange')
+        .attr("d", d3.line()
+            .x(function (d, i) { return x(d.datum) })
+            .y(function (d, i) {
+                return y(convertCommaFloats(d.werte.Qualitaetsgrenze) / 100);
             }))
 
     svg.append('path')
@@ -256,6 +266,17 @@ function visualiseData_2(data) {
             .x(function (d, i) { return x(d.datum) })
             .y(function (d, i) {
                 return y(convertCommaFloats(d.werte.Tavg_temp) / 100);
+            }))
+
+    svg.append('path')
+        .data([data])
+        .attr("class", "line")
+        .attr('id', 'quali')
+        .attr('stroke', 'orange')
+        .attr("d", d3.line()
+            .x(function (d, i) { return x(d.datum) })
+            .y(function (d, i) {
+                return y(convertCommaFloats(d.werte.Qualitaetsgrenze) / 100);
             }))
 
     svg.append('path')
@@ -375,6 +396,17 @@ function visualiseData_3(data) {
     svg.append('path')
         .data([data])
         .attr("class", "line")
+        .attr('id', 'quali')
+        .attr('stroke', 'orange')
+        .attr("d", d3.line()
+            .x(function (d, i) { return x(d.datum) })
+            .y(function (d, i) {
+                return y(convertCommaFloats(d.werte.Qualitaetsgrenze) / 100);
+            }))
+
+    svg.append('path')
+        .data([data])
+        .attr("class", "line")
         .attr('id', 'laut')
         .attr("d", d3.line()
             .x(function (d, i) { return x(d.datum) })
@@ -487,6 +519,17 @@ function visualiseData_4(data) {
     svg.append('path')
         .data([data])
         .attr("class", "line")
+        .attr('id', 'quali')
+        .attr('stroke', 'orange')
+        .attr("d", d3.line()
+            .x(function (d, i) { return x(d.datum) })
+            .y(function (d, i) {
+                return y(convertCommaFloats(d.werte.Qualitaetsgrenze) / 100);
+            }))
+
+    svg.append('path')
+        .data([data])
+        .attr("class", "line")
         .attr('id', 'laut')
         .attr("d", d3.line()
             .x(function (d, i) { return x(d.datum) })
@@ -522,4 +565,10 @@ function computeDimensions(selection) {
     }
 
     console.log(dimensions);
+}
+
+function computeDiff(inpt){
+    inpt.forEach(function(v,index){
+        console.log(convertCommaFloats(v.werte.Tavg_temp)- convertCommaFloats(v.werte.Qualitaetsgrenze))
+    });
 }
