@@ -66,7 +66,7 @@ function visualiseData(data) {
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
         .attr("transform", "translate(" + 5 + "," + margin.top + ")");
-
+    axisUpdateExample1()
 
     // setting bases variables for dynamic axes
     var xScale = d3.scaleTime();
@@ -74,15 +74,6 @@ function visualiseData(data) {
 
     var xAxisCall = d3.axisBottom()
     var yAxisCall = d3.axisLeft()
-
-
-    //custom axes for the calculated data graph
-    var xAxisCalc = d3.axisBottom(x)
-        .ticks(10)
-
-    var yAxisCalc = d3.axisLeft(y)
-        .tickValues([])
-        .ticks(10);
 
     //appending the axes to the graphs
     initAxis();
@@ -131,11 +122,12 @@ function visualiseData(data) {
 
     setInterval(function () {
 
-        var v = data.slice(0,10);
+        var v = data.slice(0, 10);
         data.push(v);
 
         redrawWithAnimation();
 
+        axisUpdater(data);
 
         computeOilQuality(data[0].werte.Tavg_temp, data[0].werte.Qualitaetsgrenze);
 
@@ -143,7 +135,7 @@ function visualiseData(data) {
 
         drawValues(data[29]);
 
-    }, 1000)
+    }, 10000)
 
 
 
@@ -158,65 +150,139 @@ function visualiseData(data) {
 
 
 
+    function axisUpdater(data) {
+
+        setScale(data);
+        updateAxis();
+
+        function updateAxis() {
+            var t = d3.transition()
+                .duration(500)
+
+            svg.select(".x")
+                .transition(t)
+                .call(xAxisCall)
+
+            svg.select(".y")
+                .transition(t)
+                .call(yAxisCall)
+
+        }
+
+        function setScale(data) {
+
+            xScale.domain([data[0].datum, data[29].datum]).range([0, width])
+            yScale.domain([0, d3.max(data, function (d) { return d.DATA })]).range([height, 0])
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    function updateAxis() {
-        var t = d3.transition()
-            .duration(500)
-
-        svg.select(".x")
-            .transition(t)
-            .call(xAxisCall)
-
-        svg.select(".y")
-            .transition(t)
-            .call(yAxisCall)
-
+        }
     }
+
+    function axisUpdateExample1() {
+        var svg = d3.select("#example1")
+
+        var xScale = d3.scaleLinear()
+        var yScale = d3.scaleLinear()
+
+        var xAxisCall = d3.axisBottom()
+        var yAxisCall = d3.axisLeft()
+
+
+        setScale1()
+        initAxis()
+
+
+        setInterval(toggle(
+            function () {
+                setScale2()
+                updateAxis()
+            },
+            function () {
+                setScale1()
+                updateAxis()
+
+            }), 2000)
+
+        function setScale1() {
+            xScale.domain([0, 1000]).range([0, width - (margin.top + margin.bottom)])
+            yScale.domain([0, 1000]).range([height - (margin.top + margin.bottom), 0])
+
+        }
+
+        function setScale2() {
+            xScale.domain([0, 100]).range([0, width - (margin.top + margin.bottom)])
+            yScale.domain([0, 100]).range([height - (margin.top + margin.bottom), 0])
+
+        }
+
+
+        function initAxis() {
+            svg.append("g")
+                .attr("class", "x axis")
+                .attr("transform", "translate(" + [margin.left, height - margin.top] + ")")
+                .call(xAxisCall)
+
+            svg.append("g")
+                .attr("class", "y axis")
+                .attr("transform", "translate(" + [margin.left, margin.top] + ")")
+                .call(yAxisCall)
+        }
+
+        function updateAxis() {
+            var t = d3.transition()
+                .duration(500)
+
+            svg.select(".x")
+                .transition(t)
+                .call(xAxisCall)
+
+            svg.select(".y")
+                .transition(t)
+                .call(yAxisCall)
+
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
     function initAxis() {
-        svg.append("g")
+        graph_l.append("g")
             .attr("class", "x axis")
             .attr("transform", "translate(" + [margin.left, height - margin.top] + ")")
             .call(xAxisCall)
 
-        svg.append("g")
+        graph_l.append("g")
             .attr("class", "y axis")
             .attr("transform", "translate(" + [margin.left, margin.top] + ")")
             .call(yAxisCall)
     }
-
-
-
 
 
     function redrawWithAnimation() {
@@ -227,7 +293,7 @@ function visualiseData(data) {
             .attr("d", line) // apply the new data values ... but the new value is hidden at this point off the right of the canvas
             .transition() // start a transition to bring the new value into view
 
-            .duration(100) // for this demo we want a continual slide so set this to the same as the setInterval amount below
+            .duration(10000) // for this demo we want a continual slide so set this to the same as the setInterval amount below
             .attr("transform", "translate(0," + x(0) + ")"); // animate a slide to the left back to x(0) pixels to reveal the new value
 
     }
@@ -363,6 +429,17 @@ function drawValues(inpt) {
             .attr('fill', 'red')
             .text('Oil temperature: ' + inpt.DATA + '°C')
 
+    }
+}
+
+
+function toggle() {
+    var fn = arguments;
+    var l = arguments.length;
+    var i = 0;
+    return function () {
+        if (l <= i) i = 0;
+        fn[i++]();
     }
 }
 
