@@ -77,7 +77,14 @@
   
     color:white;
   }
-  
+
+  #gridItemBottom{
+    grid-area: 11/1/12/10;
+
+  }
+
+
+
   .gridItemGraph {
     grid-area: 1/1/10/10;
     background-color: rgb(180, 215, 221);
@@ -89,6 +96,7 @@
   
   #graphContainer{
     margin-top:7.5vh;
+    margin-bottom: 7.5vh;
   }
   
   .yLabel{
@@ -100,7 +108,9 @@
     
   }
   
-  
+  #infoText_prediction{
+    font-size:4.5vw;
+  }
   
   
   .line {
@@ -113,8 +123,10 @@
   .axis {
     font: 15px sans-serif;
   }
+
+
   
   
   
-  /* svg text stuff */
+
   
