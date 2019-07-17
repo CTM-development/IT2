@@ -3,6 +3,7 @@ var files = ['http://it2wi1.if-lab.de/rest/mpr_fall1', 'http://it2wi1.if-lab.de/
 var promises = [];
 
 const scope = 30;
+const intervall = 1;
 
 var winWidth = window.innerWidth;
 var winHeight = window.innerHeight;
@@ -148,7 +149,7 @@ function axisUpdaterForActuallData(data) {
 
             })
 
-        , 2000)
+        , 250)
 
     function setScale1() {
         xScale.domain([data[0].date, data[scope].date]).range([0, width])
@@ -167,10 +168,10 @@ function axisUpdaterForActuallData(data) {
     function changeData(data) {
 
         let change;
-        if (data[scope].index + scope > data.length) {
+        if (data[intervall].index + intervall > data.length) {
             change = data.splice(0, data.length - data[0].index);
         }
-        else { change = data.splice(0, scope); }
+        else { change = data.splice(0, intervall); }
 
         for (c of change) {
             data.push(c);
@@ -276,7 +277,7 @@ function axisUpdaterForPrediction(data) {
 
             })
 
-        , 2000)
+        , 250)
 
     function setScale1() {
         xScale.domain([data[0].newData, data[scope].newData]).range([0, width - (margin.top + margin.bottom)])
@@ -337,7 +338,7 @@ function axisUpdaterForPrediction(data) {
 
         svg.select('g').append("line")
             .attr("x1", 0)
-            .attr("x2", width)
+            .attr("x2", width - 50)
             .attr("y1", yScale(75))
             .attr("y2", yScale(75))
             .style("stroke", "orange")
@@ -410,7 +411,7 @@ function clearLineRight() {
 }
 
 function computeOilQuality(temp, quali) {
-
+ 
     var diff = temp / quali;
     diff = diff.toFixed(2);
 
@@ -420,13 +421,19 @@ function computeOilQuality(temp, quali) {
             .text(' Oil quality is at 100%')
 
     }
+    else if (diff > 0.6) {
+        diff = 2 - diff;
+        diff = diff.toFixed(2);
+        d3.select('#infoText_quali')
+            .attr('fill', 'green')
+            .text('Oil quality is at ' + diff * 100 + '%')
+    }
     else {
         diff = 2 - diff;
         diff = diff.toFixed(2);
         d3.select('#infoText_quali')
             .attr('fill', 'red')
-            .text('Oil quality is at ' + diff + '%')
-
+            .text('Oil quality is at ' + diff * 100 + '%')
 
     }
 }
@@ -500,24 +507,32 @@ function givePrediction(data) {
 
 function giveTimePrediction(array) {
 
-    let averageSlope = (array[scope].DATA-array[scope-20].DATA)/(25);
+    let averageSlope = (array[scope].DATA - array[scope - 20].DATA) / (25);
 
-    let dangerzone = 150;
-    let fx=array[scope].DATA;
+    if (averageSlope > 0) {
+        let dangerzone = 150;
+        let fx = array[scope].DATA;
 
-    let timer=0;
+        let timer = 0;
 
-    while(fx<dangerzone){
-        fx+=averageSlope;
-        timer++;
-    }
+        while (fx < dangerzone) {
+            fx += averageSlope;
+            timer++;
+        }
 
-    timer/=60;
+        timer /= 60;
 
-    timer=timer.toFixed(2);
+        timer = timer.toFixed(2);
 
 
-    d3.select('#infoText_prediction')
+        d3.select('#infoText_prediction')
             .attr('fill', 'white')
             .text('Change Oil in approximatly: ' + timer + ' Minutes')
+    }
+    else{
+        d3.select('#infoText_prediction')
+            .attr('fill', 'none')
+            .text('Change Oil in approximatly: error Minutes')
+    }
+
 }

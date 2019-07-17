@@ -122,6 +122,5 @@ li a:hover:not(.active) {
 }
 
 .infoText{
-    font-size:5vw;
-    fill:white;
+    font-size:3vw;
 }
