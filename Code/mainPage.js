@@ -188,7 +188,7 @@ function computeOilQuality(temp, quali) {
         diff = 2 - diff;
         diff = diff.toFixed(2);
         d3.select('#oilT2')
-            .attr('fill', 'green')
+            .attr('fill', 'orange')
             .text('Oil qual: ' + diff * 100 + '%')
 
     }
@@ -207,7 +207,7 @@ function drawValuesTemp(inpt) {
 
     if (inpt < 70) {
         d3.select('#oilT1')
-            .attr('fill', 'white')
+            .attr('fill', 'green')
             .text('Oil temp: ' + inpt + '°C')
     }
     else {
@@ -223,7 +223,7 @@ function drawValuesVibration(inpt) {
     inpt = inpt.toFixed(3);
     if (inpt < 0.15) {
         d3.select('#vibT1')
-            .attr('fill', 'white')
+            .attr('fill', 'green')
             .text('Vibration: ' + inpt + 'Hz')
     }
     else {
@@ -238,7 +238,7 @@ function drawValuesSound(inpt) {
 
     if (inpt < 80) {
         d3.select('#vibT2')
-            .attr('fill', 'white')
+            .attr('fill', 'green')
             .text('Sound lvl: ' + inpt + 'dB')
     }
     else {
